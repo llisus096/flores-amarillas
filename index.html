@@ -11,7 +11,7 @@
             box-sizing: border-box;
         }
         body {
-            background-color: #fdf6ec;
+            background-color: #faf4eb;
             overflow: hidden;
             height: 100vh;
             display: flex;
@@ -19,7 +19,7 @@
             justify-content: space-between;
             align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px 10px;
+            padding: 20px 15px;
         }
         canvas {
             position: absolute;
@@ -33,34 +33,36 @@
             position: relative;
             z-index: 2;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             pointer-events: none;
         }
         h1 {
-            font-size: 1.5rem;
-            color: #8b5a2b;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            font-weight: bold;
+            font-size: 1.6rem;
+            color: #7a4b1e;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 700;
         }
         .counter-container {
             position: relative;
             z-index: 2;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             pointer-events: none;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 10px 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border: 1px solid #ffe066;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid #ffd866;
+            width: 88%;
+            max-width: 350px;
         }
         .counter-title {
             font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 4px;
+            color: #777;
+            margin-bottom: 5px;
         }
         .counter-time {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: #d48806;
             font-weight: bold;
         }
@@ -90,20 +92,19 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Generar puntos para la copa en forma de corazón
+        // Generar corazón de flores amarillas tupido
         const heartFlowers = [];
-        const numFlowers = 450;
+        const numFlowers = 650; // Más flores para tupir los huecos
 
         function initHeart() {
             heartFlowers.length = 0;
             const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2 - 20;
-            const scale = Math.min(canvas.width, canvas.height) / 32;
+            const centerY = canvas.height / 2 - 30;
+            const scale = Math.min(canvas.width, canvas.height) / 30;
 
             for (let i = 0; i < numFlowers; i++) {
-                // Ecuación paramétrica de corazón
                 const t = Math.random() * Math.PI * 2;
-                const r = Math.sqrt(Math.random()); // Distribución interna uniforme
+                const r = Math.pow(Math.random(), 0.5); 
                 
                 let x = 16 * Math.pow(Math.sin(t), 3);
                 let y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
@@ -114,8 +115,8 @@
                 heartFlowers.push({
                     x: centerX + x,
                     y: centerY + y,
-                    size: Math.random() * 6 + 5,
-                    color: Math.random() > 0.2 ? '#ffcc00' : '#ffa500',
+                    size: Math.random() * 5.5 + 4.5,
+                    color: Math.random() > 0.25 ? '#ffcc00' : '#ff9900',
                     angle: Math.random() * Math.PI * 2
                 });
             }
@@ -123,14 +124,14 @@
         initHeart();
         window.addEventListener('resize', initHeart);
 
-        // Hojas/Flores cayendo
+        // Lluvia de flores cayendo
         const fallingParticles = [];
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 35; i++) {
             fallingParticles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 size: Math.random() * 5 + 4,
-                speedY: Math.random() * 1 + 0.5,
+                speedY: Math.random() * 1.2 + 0.6,
                 speedX: Math.random() * 0.8 - 0.4,
                 angle: Math.random() * Math.PI * 2
             });
@@ -141,62 +142,73 @@
             ctx.translate(x, y);
             ctx.rotate(angle);
             
-            // Pétalos
+            // Pétalos suaves
             ctx.fillStyle = color;
             for (let i = 0; i < 5; i++) {
                 ctx.rotate((Math.PI * 2) / 5);
                 ctx.beginPath();
-                ctx.arc(0, size * 0.6, size * 0.4, 0, Math.PI * 2);
+                ctx.arc(0, size * 0.6, size * 0.45, 0, Math.PI * 2);
                 ctx.fill();
             }
             // Centro
             ctx.beginPath();
             ctx.arc(0, 0, size * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = '#5c3a21';
+            ctx.fillStyle = '#4a2c11';
             ctx.fill();
 
             ctx.restore();
         }
 
-        function drawTree() {
+        function drawTreeTrunk() {
             const centerX = canvas.width / 2;
-            const bottomY = canvas.height / 2 + 180;
+            const bottomY = canvas.height / 2 + 190;
             const topY = canvas.height / 2 - 20;
 
-            // Tronco principal
             ctx.save();
+            
+            // Tronco principal limpio
             ctx.beginPath();
-            ctx.fillStyle = '#5c3a21';
-            ctx.moveTo(centerX - 18, bottomY);
-            ctx.quadraticCurveTo(centerX - 10, bottomY - 100, centerX - 6, topY + 40);
-            ctx.lineTo(centerX + 6, topY + 40);
-            ctx.quadraticCurveTo(centerX + 10, bottomY - 100, centerX + 18, bottomY);
+            ctx.fillStyle = '#523013';
+            ctx.moveTo(centerX - 14, bottomY);
+            ctx.quadraticCurveTo(centerX - 8, bottomY - 110, centerX - 5, topY + 50);
+            ctx.lineTo(centerX + 5, topY + 50);
+            ctx.quadraticCurveTo(centerX + 8, bottomY - 110, centerX + 14, bottomY);
             ctx.closePath();
             ctx.fill();
 
-            // Ramas extendidas
-            ctx.strokeStyle = '#5c3a21';
+            // Ramas elegantes
+            ctx.strokeStyle = '#523013';
+            ctx.lineCap = 'round';
+            
+            // Rama izquierda
             ctx.lineWidth = 6;
             ctx.beginPath();
-            ctx.moveTo(centerX, topY + 80);
-            ctx.quadraticCurveTo(centerX - 40, topY + 30, centerX - 80, topY + 10);
-            ctx.moveTo(centerX, topY + 70);
-            ctx.quadraticCurveTo(centerX + 40, topY + 20, centerX + 80, topY);
+            ctx.moveTo(centerX - 2, topY + 80);
+            ctx.quadraticCurveTo(centerX - 40, topY + 40, centerX - 90, topY + 20);
             ctx.stroke();
-            ctx.restore();
 
-            // Copa de Flores en forma de corazón
-            heartFlowers.forEach(f => {
-                drawFlor(f.x, f.y, f.size, f.color, f.angle);
-            });
+            // Rama derecha
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(centerX + 2, topY + 70);
+            ctx.quadraticCurveTo(centerX + 40, topY + 30, centerX + 90, topY + 15);
+            ctx.stroke();
+
+            ctx.restore();
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawTree();
+            // 1. Dibujar Copa de Flores (AL FONDO)
+            heartFlowers.forEach(f => {
+                drawFlor(f.x, f.y, f.size, f.color, f.angle);
+            });
 
-            // Animar caída de flores
+            // 2. Dibujar Tronco y Ramas (POR ENCIMA DE LAS FLORES)
+            drawTreeTrunk();
+
+            // 3. Dibujar flores cayendo en frente
             fallingParticles.forEach(p => {
                 p.y += p.speedY;
                 p.x += p.speedX;
@@ -215,7 +227,7 @@
 
         animate();
 
-        // Contador de tiempo (Ajusta tu fecha aquí)
+        // Contador de tiempo
         const startDate = new Date("2025-01-01T00:00:00"); 
 
         function updateCounter() {
@@ -234,3 +246,4 @@
         updateCounter();
     </script>
 </body>
+</html>
